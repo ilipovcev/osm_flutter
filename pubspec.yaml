@@ -21,6 +21,13 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+dependency_overrides:
+  flutter_osm_interface:
+    git:
+      url: https://github.com/ilipovcev/osm_flutter
+      path: flutter_osm_interface
+      ref: master
     
 
 
