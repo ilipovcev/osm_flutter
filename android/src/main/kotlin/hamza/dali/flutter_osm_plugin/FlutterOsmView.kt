@@ -68,6 +68,7 @@ import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.CustomZoomButtonsController
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.*
+import org.osmdroid.views.overlay.gestures.RotationGestureOverlay
 import java.io.ByteArrayOutputStream
 import kotlin.collections.component1
 import kotlin.collections.component2
@@ -269,8 +270,6 @@ class FlutterOsmView(
     }
 
     private fun initMap() {
-
-
         map = MapView(context)
 
         map!!.layoutParams = MapView.LayoutParams(
@@ -319,10 +318,11 @@ class FlutterOsmView(
         map!!.overlayManager.add(0, staticOverlayListener)
         map!!.overlayManager.add(folderMarkers)
 
+        setRotationOverlay()
+
         mainLinearLayout.addView(map)
         /// init LocationManager
         locationNewOverlay = CustomLocationManager(map!!)
-
     }
 
 
@@ -745,6 +745,14 @@ class FlutterOsmView(
 
     private fun clearCacheMap() {
         mapSnapShot().reset()
+    }
+
+    private fun setRotationOverlay() {
+        val rotation = RotationGestureOverlay(map)
+        rotation.isEnabled = true
+        map?.setMultiTouchControls(true)
+        map?.overlays?.add(rotation)
+        io.flutter.Log.i("overlay", "rotation overlay created")
     }
 
     private fun setZoom(methodCall: MethodCall, result: MethodChannel.Result) {

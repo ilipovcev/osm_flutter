@@ -1,4 +1,4 @@
-package hamza.dali.flutter_osm_plugin
+    package hamza.dali.flutter_osm_plugin
 
 import android.app.Activity
 import android.app.Application
