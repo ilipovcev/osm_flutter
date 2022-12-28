@@ -53,6 +53,8 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
+import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer
+import org.osmdroid.bonuspack.clustering.StaticCluster
 import org.osmdroid.bonuspack.routing.OSRMRoadManager
 import org.osmdroid.bonuspack.routing.RoadManager
 import org.osmdroid.bonuspack.utils.PolylineEncoder
@@ -752,7 +754,6 @@ class FlutterOsmView(
         rotation.isEnabled = true
         map?.setMultiTouchControls(true)
         map?.overlays?.add(rotation)
-        io.flutter.Log.i("overlay", "rotation overlay created")
     }
 
     private fun setZoom(methodCall: MethodCall, result: MethodChannel.Result) {
@@ -1911,6 +1912,8 @@ class FlutterOsmView(
             }
         }
 
+        val cluster = RadiusMarkerClusterer(this.context)
+
         staticPoints[idStaticPosition]?.forEachIndexed { index, geoPoint ->
             val marker = FlutterMarker(context, map!!, scope)
             marker.position = geoPoint
@@ -1936,9 +1939,12 @@ class FlutterOsmView(
             } else {
                 marker.setIconMaker(null, null)
             }
+            cluster.add(marker)
             overlay.add(marker)
         }
         folderStaticPosition.add(overlay)
+        val overlays = map!!.overlays
+        overlays.add(cluster)
         if (!mapSnapShot().advancedPicker()) {
             map!!.overlays.remove(folderStaticPosition)
             map!!.overlays.add(folderStaticPosition)
