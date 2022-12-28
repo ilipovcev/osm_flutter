@@ -1757,7 +1757,7 @@ class FlutterOsmView(
             staticPoints[id]?.addAll(geoPoints)
             if (folderStaticPosition.items.isNotEmpty())
                 folderStaticPosition.remove(folderStaticPosition.items.first {
-                    (it as FolderOverlay).name?.equals(id) == true
+                    (it as RadiusMarkerClusterer).name?.equals(id) == true
                 })
         } else {
             staticPoints[id!!] = geoPoints
