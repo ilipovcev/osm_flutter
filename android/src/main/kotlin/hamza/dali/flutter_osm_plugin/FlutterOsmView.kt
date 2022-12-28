@@ -1896,9 +1896,9 @@ class FlutterOsmView(
 
     private fun showStaticPosition(idStaticPosition: String, angles: List<Double> = emptyList()) {
 
-        var overlay: FolderOverlay? = folderStaticPosition.items.firstOrNull {
-            (it as FolderOverlay).name?.equals(idStaticPosition) == true
-        } as FolderOverlay?
+        var overlay: RadiusMarkerClusterer? = folderStaticPosition.items.firstOrNull {
+            (it as RadiusMarkerClusterer).name?.equals(idStaticPosition) == true
+        } as RadiusMarkerClusterer?
 
         overlay?.let {
             it.items.clear()
@@ -1907,12 +1907,10 @@ class FlutterOsmView(
             folderStaticPosition.remove(overlay)
         }
         if (overlay == null) {
-            overlay = FolderOverlay().apply {
+            overlay = RadiusMarkerClusterer(this.context).apply {
                 name = idStaticPosition
             }
         }
-
-        val cluster = RadiusMarkerClusterer(this.context)
 
         staticPoints[idStaticPosition]?.forEachIndexed { index, geoPoint ->
             val marker = FlutterMarker(context, map!!, scope)
@@ -1939,12 +1937,9 @@ class FlutterOsmView(
             } else {
                 marker.setIconMaker(null, null)
             }
-            cluster.add(marker)
             overlay.add(marker)
         }
         folderStaticPosition.add(overlay)
-        val overlays = map!!.overlays
-        overlays.add(cluster)
         if (!mapSnapShot().advancedPicker()) {
             map!!.overlays.remove(folderStaticPosition)
             map!!.overlays.add(folderStaticPosition)
