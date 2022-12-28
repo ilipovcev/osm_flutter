@@ -220,9 +220,9 @@ class _MainExampleState extends State<MainExample> with OSMMixinObserver {
     );
     final bounds = await controller.bounds;
     print(bounds.toString());
-    Future.delayed(Duration(seconds: 5), () {
-      controller.changeTileLayer(tileLayer: CustomTile.cycleOSM());
-    });
+    // Future.delayed(Duration(seconds: 5), () {
+    //   controller.changeTileLayer(tileLayer: CustomTile.cycleOSM());
+    // });
   }
 
   @override
@@ -837,7 +837,7 @@ class OSMLayersChoiceWidget extends StatelessWidget {
             children: [
               TextButton(
                 onPressed: () {
-                  setLayerCallback(CustomTile.publicTransportationOSM());
+                  // setLayerCallback(CustomTile.publicTransportationOSM());
                 },
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -861,7 +861,7 @@ class OSMLayersChoiceWidget extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  setLayerCallback(CustomTile.cycleOSM());
+                  // setLayerCallback(CustomTile.cycleOSM());
                 },
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
