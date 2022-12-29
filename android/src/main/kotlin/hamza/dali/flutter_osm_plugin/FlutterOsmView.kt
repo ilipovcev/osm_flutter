@@ -127,6 +127,11 @@ class FlutterOsmView(
     private val folderStaticPosition: FolderOverlay by lazy {
         FolderOverlay()
     }
+
+    private val clusters: HashMap<String, RadiusMarkerClusterer> = HashMap()
+    private val clusteredMarkerIcons: HashMap<String, Bitmap> = HashMap()
+    private val clusteredPoints: HashMap<String, MutableList<GeoPoint>> = HashMap()
+
     private val folderShape: FolderOverlay by lazy {
         FolderOverlay().apply {
             name = Constants.shapesNames
@@ -331,6 +336,9 @@ class FlutterOsmView(
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         try {
             when (call.method) {
+                "clusterMarkers" -> {
+                    clusterMarkers(call, result)
+                }
                 "change#tile" -> {
                     val args = call.arguments as HashMap<String, Any>?
                     when (args != null && args.isNotEmpty()) {
@@ -1711,6 +1719,36 @@ class FlutterOsmView(
         return flutterRoad
     }
 
+    private fun clusterMarkers(call: MethodCall, result: MethodChannel.Result) {
+        val args = call.arguments as HashMap<String, Any>
+        val id = args["id"] as String?
+        val points = args["point"] as MutableList<HashMap<String, Double>>?
+        val geoPoints: MutableList<GeoPoint> = emptyList<GeoPoint>().toMutableList()
+        val overlays = map!!.overlays
+
+        if (clusters.containsKey(id)) {
+            overlays.remove(clusters[id])
+            clusters.remove(id)
+            if (id != null) {
+                clusters[id] = RadiusMarkerClusterer(this.context)
+            }
+        }
+
+        for (hashMap in points!!) {
+            val point = GeoPoint(hashMap["lat"]!!, hashMap["lon"]!!)
+            geoPoints.add(point)
+
+            if (clusters.containsKey(id)) {
+                val marker : Marker = Marker(map)
+                marker.position = point
+                marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+                clusters[id]!!.add(marker)
+            }
+        }
+
+        overlays.add(clusters[id])
+    }
+
     private fun staticPositionIconMaker(call: MethodCall, result: MethodChannel.Result) {
         val hashMap: HashMap<String, Any> = call.arguments as HashMap<String, Any>
 
@@ -1896,18 +1934,16 @@ class FlutterOsmView(
 
     private fun showStaticPosition(idStaticPosition: String, angles: List<Double> = emptyList()) {
 
-        var overlay: RadiusMarkerClusterer? = folderStaticPosition.items.firstOrNull {
-            (it as RadiusMarkerClusterer).name?.equals(idStaticPosition) == true
-        } as RadiusMarkerClusterer?
+        var overlay: FolderOverlay? = folderStaticPosition.items.firstOrNull {
+            (it as FolderOverlay).name?.equals(idStaticPosition) == true
+        } as FolderOverlay?
 
-        overlay?.let {
-            it.items.clear()
-        }
+        overlay?.items?.clear()
         if (overlay != null) {
             folderStaticPosition.remove(overlay)
         }
         if (overlay == null) {
-            overlay = RadiusMarkerClusterer(this.context).apply {
+            overlay = FolderOverlay().apply {
                 name = idStaticPosition
             }
         }
