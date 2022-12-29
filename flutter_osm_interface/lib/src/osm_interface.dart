@@ -206,6 +206,12 @@ abstract class MobileOSMPlatform extends OSMPlatform {
     String id,
   );
 
+  Future<void> clusterMarkers(
+    int idOSM,
+    List<GeoPoint> pList,
+    String id,
+  );
+
   Future<double> getZoom(
     int idOSM,
   );

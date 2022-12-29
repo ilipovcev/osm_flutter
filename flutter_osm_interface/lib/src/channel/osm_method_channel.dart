@@ -348,6 +348,26 @@ class MethodChannelOSM extends MobileOSMPlatform {
     }
   }
 
+  @override
+  Future<void> clusterMarkers(
+    int idOSM,
+    List<GeoPoint> pList,
+    String id,
+  ) async {
+    try {
+      List<Map<String, double>> listGeos = [];
+      for (GeoPoint p in pList) {
+        listGeos.add(p.toMap());
+      }
+      await _channels[idOSM]?.invokeMethod("clusterMarkers", {
+        "id": id,
+        "point": listGeos,
+      });
+    } on PlatformException catch (e) {
+      print(e.message);
+    }
+  }
+
   Future<dynamic> _capturePng(GlobalKey globalKey) async {
     if (globalKey.currentContext == null) {
       throw Exception("Error to draw you custom icon");

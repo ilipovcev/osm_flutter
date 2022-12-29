@@ -1726,12 +1726,12 @@ class FlutterOsmView(
         val geoPoints: MutableList<GeoPoint> = emptyList<GeoPoint>().toMutableList()
         val overlays = map!!.overlays
 
-        if (clusters.containsKey(id)) {
+        if (clusters.containsKey(id) && id != null) {
             overlays.remove(clusters[id])
             clusters.remove(id)
-            if (id != null) {
-                clusters[id] = RadiusMarkerClusterer(this.context)
-            }
+            clusters[id] = RadiusMarkerClusterer(context)
+        } else if (id != null) {
+            clusters[id] = RadiusMarkerClusterer(context)
         }
 
         for (hashMap in points!!) {
