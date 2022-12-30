@@ -26,7 +26,7 @@ dependency_overrides:
     git:
       url: https://github.com/ilipovcev/osm_flutter
       path: flutter_osm_interface
-      ref: master
+      ref: 582e9b1731fa70dd2ed4590a6545b6b3bf12041c
     
 
 
