@@ -404,6 +404,10 @@ class MobileOSMController extends IBaseOSMController {
     await osmPlatform.staticPosition(_idMap, geoPoints, id);
   }
 
+  Future<void> setClusterMarkers(List<GeoPoint> geoPoints, String id) async {
+    await osmPlatform.clusterMarkers(_idMap, geoPoints, id);
+  }
+
   /// zoomIn use stepZoom
   Future<void> zoomIn() async {
     await osmPlatform.setZoom(_idMap, stepZoom: 0);
