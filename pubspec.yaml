@@ -16,7 +16,7 @@ dependencies:
   url_launcher: ^6.1.7
   dio: ^4.0.6
   uuid: ^3.0.7
-  flutter_osm_interface:
+  flutter_osm_interface: ^0.1.30
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -26,7 +26,7 @@ dependency_overrides:
     git:
       url: https://github.com/ilipovcev/osm_flutter
       path: flutter_osm_interface
-      ref: master
+      ref: 4b18b91f8bad26aad277601f05346d9e509c47fd
     
 
 
