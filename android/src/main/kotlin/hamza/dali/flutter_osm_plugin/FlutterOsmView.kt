@@ -336,9 +336,6 @@ class FlutterOsmView(
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         try {
             when (call.method) {
-                "clusterMarkers" -> {
-                    clusterMarkers(call, result)
-                }
                 "change#tile" -> {
                     val args = call.arguments as HashMap<String, Any>?
                     when (args != null && args.isNotEmpty()) {
@@ -499,6 +496,13 @@ class FlutterOsmView(
                 }
                 "staticPosition#IconMarker" -> {
                     staticPositionIconMaker(call, result)
+                }
+                "clusterMarkers" -> {
+                    clusterMarkers(call, result)
+                    result.success(null)
+                }
+                "cluster#IconMarker" -> {
+                    clusterIconMarker(call, result)
                 }
                 "draw#circle" -> {
                     drawCircle(call, result)
@@ -1719,10 +1723,38 @@ class FlutterOsmView(
         return flutterRoad
     }
 
+    private fun clusterIconMarker(call: MethodCall, result: MethodChannel.Result) {
+        val hashMap: HashMap<String, Any> = call.arguments as HashMap<String, Any>
+
+        try {
+            val key = (hashMap["id"] as String)
+            val bytes = (hashMap["bitmap"] as ByteArray)
+            val bitmap = getBitmap(bytes)
+            val refresh = hashMap["refresh"] as Boolean
+            clusteredMarkerIcons[key] = bitmap
+            mapSnapShot().addIconCluster(key, bytes)
+            scope?.launch {
+                if (clusters.containsKey(key) && refresh) {
+                    showStaticPosition(
+                        key,
+                        mapSnapShot().staticGeoPoints()[key]!!.second
+                    )
+                }
+            }
+            result.success(null)
+        } catch (e: java.lang.Exception) {
+            Log.e("id", hashMap["id"].toString())
+            Log.e("err static point marker", e.stackTraceToString())
+            result.error("400", "error to getBitmap static Position", "")
+            staticMarkerIcon = HashMap()
+        }
+    }
+
     private fun clusterMarkers(call: MethodCall, result: MethodChannel.Result) {
         val args = call.arguments as HashMap<String, Any>
         val id = args["id"] as String?
         val points = args["point"] as MutableList<HashMap<String, Double>>?
+        val customIcon = if (args["icon"] == null) getBitmap(args["icon"] as ByteArray) else null
         val geoPoints: MutableList<GeoPoint> = emptyList<GeoPoint>().toMutableList()
         val overlays = map!!.overlays
 
@@ -1745,7 +1777,8 @@ class FlutterOsmView(
                 clusters[id]!!.add(marker)
             }
         }
-
+        if (customIcon != null) clusters[id]!!.setIcon(customIcon)
+        clusters[id]!!.setRadius(400)
         overlays.add(clusters[id])
     }
 

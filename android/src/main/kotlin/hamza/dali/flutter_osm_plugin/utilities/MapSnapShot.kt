@@ -26,6 +26,8 @@ class MapSnapShot {
 
     private var markers: ArrayMap<GeoPoint, ByteArray?> = ArrayMap<GeoPoint, ByteArray?>()
 
+    private var clusterIcons = HashMap<String, ByteArray>()
+    private var clusters = ArrayList<String>()
     fun advancedPicker() = isAdvancedPicker
     fun centerGeoPoint() = centerMap
     fun boundingWorld() = boundingWorldBox
@@ -33,12 +35,21 @@ class MapSnapShot {
     fun markers() = markers
     fun staticGeoPoints() = staticPoints
     fun staticGeoPointsIcons() = staticPointsIcons
+    fun clusterIcons() = clusterIcons
+    fun clusters() = clusters
     fun addToStaticGeoPoints(id: String, value: Pair<List<GeoPoint>, List<Double>>) {
         staticPoints[id] = value
     }
 
     fun addToIconsStaticGeoPoints(id: String, value: ByteArray) {
         staticPointsIcons[id] = value
+    }
+
+    fun addCluster(id: String) {
+        clusters.add(id)
+    }
+    fun addIconCluster(id: String, value: ByteArray) {
+        clusterIcons[id] = value
     }
 
     fun saveMapOrientation(orientation: Float) {

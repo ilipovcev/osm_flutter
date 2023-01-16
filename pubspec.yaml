@@ -28,8 +28,6 @@ dependency_overrides:
   flutter_osm_interface:
     git:
       url: https://github.com/ilipovcev/flutter_osm_interface
-      ref: master
-
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

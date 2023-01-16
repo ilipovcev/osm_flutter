@@ -384,6 +384,22 @@ class MobileOSMController extends IBaseOSMController {
     });
   }
 
+  Future<void> setCusterMarker(
+    String id,
+    MarkerIcon markerIcon, {
+    bool refresh = false,
+  }) async {
+    _osmFlutterState.widget.dynamicMarkerWidgetNotifier.value = markerIcon;
+    await Future.delayed(Duration(milliseconds: 300), () async {
+      await osmPlatform.customClusterMarker(
+        _idMap,
+        _osmFlutterState.dynamicMarkerKey,
+        id,
+        refresh: refresh,
+      );
+    });
+  }
+
   ///change Icon  of advanced picker Marker
   /// we need to global key to recuperate widget from tree element
   /// [key] : (GlobalKey) key of widget that represent the new marker
