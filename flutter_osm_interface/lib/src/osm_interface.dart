@@ -51,6 +51,8 @@ abstract class OSMPlatform extends PlatformInterface {
 }
 
 abstract class MobileOSMPlatform extends OSMPlatform {
+  final a = 5;
+
   Future<void> initMap(
     int idOSM,
     GeoPoint point,
