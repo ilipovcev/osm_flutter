@@ -12,6 +12,7 @@ import '../controller/osm/osm_controller.dart';
 class MobileOsmFlutter extends StatefulWidget {
   final BaseMapController controller;
   final OnGeoPointClicked? onGeoPointClicked;
+  final OnMarkerInClusterClicked? onMarkerInClusterClicked;
   final OnLocationChanged? onLocationChanged;
   final ValueNotifier<bool> mapIsReadyListener;
   final Widget? mapIsLoading;
@@ -58,7 +59,7 @@ class MobileOsmFlutter extends StatefulWidget {
     this.maxZoomLevel = 18,
     this.onMapIsReady,
     this.userLocationMarker,
-    this.androidHotReloadSupport = false,
+    this.androidHotReloadSupport = false, this.onMarkerInClusterClicked,
   }) : super(key: key);
 
   @override

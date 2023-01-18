@@ -137,6 +137,11 @@ class MobileOSMController extends IBaseOSMController {
         _osmFlutterState.widget.onGeoPointClicked!(event.value);
       });
     }
+    if (_osmFlutterState.widget.onMarkerInClusterClicked != null) {
+      osmPlatform.onClusterMarkerClickListener(_idMap).listen((event) {
+        _osmFlutterState.widget.onMarkerInClusterClicked!(event.value);
+      });
+    }
     if (_osmFlutterState.widget.onLocationChanged != null) {
       osmPlatform.onUserPositionListener(_idMap).listen((event) {
         _osmFlutterState.widget.onLocationChanged!(event.value);
