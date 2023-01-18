@@ -422,10 +422,18 @@ class MobileOSMController extends IBaseOSMController {
 
   Future<void> setClusterMarkers(
     List<GeoPoint> geoPoints,
-    GlobalKey? key,
+    MarkerIcon markerIcon,
     String id,
   ) async {
-    await osmPlatform.clusterMarkers(_idMap, geoPoints, key, id);
+    _osmFlutterState.widget.dynamicMarkerWidgetNotifier.value = markerIcon;
+    await Future.delayed(Duration(milliseconds: 300), () async {
+      await osmPlatform.clusterMarkers(
+        _idMap,
+        geoPoints,
+        _osmFlutterState.dynamicMarkerKey,
+        id,
+      );
+    });
   }
 
   /// zoomIn use stepZoom
