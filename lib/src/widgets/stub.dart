@@ -6,6 +6,7 @@ Widget getWidget({
   required bool trackMyPosition,
   OnGeoPointClicked? onGeoPointClicked,
   OnLocationChanged? onLocationChanged,
+  OnMarkerInClusterClicked? onMarkerInClusterClicked,
   required ValueNotifier<bool> mapIsReadyListener,
   required ValueNotifier<Widget?> dynamicMarkerWidgetNotifier,
   Function(bool)? onMapIsReady,

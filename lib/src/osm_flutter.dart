@@ -52,6 +52,7 @@ class OSMFlutter extends StatefulWidget {
   final List<StaticPositionGeoPoint> staticPoints;
   final OnGeoPointClicked? onGeoPointClicked;
   final OnLocationChanged? onLocationChanged;
+  final OnMarkerInClusterClicked? onMarkerInClusterClicked;
   final Function(bool)? onMapIsReady;
   final MarkerOption? markerOption;
   final UserLocationMaker? userLocationMarker;
@@ -77,6 +78,7 @@ class OSMFlutter extends StatefulWidget {
     this.onGeoPointClicked,
     this.onLocationChanged,
     this.onMapIsReady,
+    this.onMarkerInClusterClicked,
     this.roadConfiguration,
     this.stepZoom = 1,
     this.initZoom = 2,
@@ -184,6 +186,8 @@ class OSMFlutterState extends State<OSMFlutter> {
                           child: buildWidget(
                               controller: widget.controller,
                               onGeoPointClicked: widget.onGeoPointClicked,
+                              onMarkerInClusterClicked:
+                                  widget.onMarkerInClusterClicked,
                               onLocationChanged: widget.onLocationChanged,
                               dynamicMarkerWidgetNotifier:
                                   dynamicMarkerWidgetNotifier,
@@ -239,6 +243,7 @@ class OSMFlutterState extends State<OSMFlutter> {
                   : buildWidget(
                       controller: widget.controller,
                       onGeoPointClicked: widget.onGeoPointClicked,
+                      onMarkerInClusterClicked: widget.onMarkerInClusterClicked,
                       onLocationChanged: widget.onLocationChanged,
                       dynamicMarkerWidgetNotifier: dynamicMarkerWidgetNotifier,
                       mapIsLoading: widget.mapIsLoading,
