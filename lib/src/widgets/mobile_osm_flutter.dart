@@ -41,6 +41,7 @@ class MobileOsmFlutter extends StatefulWidget {
     this.trackMyPosition = false,
     this.onGeoPointClicked,
     this.onLocationChanged,
+    this.onMarkerInClusterClicked,
     required this.mapIsReadyListener,
     required this.dynamicMarkerWidgetNotifier,
     this.staticPoints = const [],
@@ -59,7 +60,7 @@ class MobileOsmFlutter extends StatefulWidget {
     this.maxZoomLevel = 18,
     this.onMapIsReady,
     this.userLocationMarker,
-    this.androidHotReloadSupport = false, this.onMarkerInClusterClicked,
+    this.androidHotReloadSupport = false,
   }) : super(key: key);
 
   @override
