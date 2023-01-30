@@ -139,6 +139,7 @@ class MobileOSMController extends IBaseOSMController {
     }
     if (_osmFlutterState.widget.onMarkerInClusterClicked != null) {
       osmPlatform.onClusterMarkerClickListener(_idMap).listen((event) {
+        print('receive event: ${event.value.toString()}');
         _osmFlutterState.widget.onMarkerInClusterClicked!(event.value);
       });
     }
@@ -431,7 +432,6 @@ class MobileOSMController extends IBaseOSMController {
     String id,
   ) async {
     _osmFlutterState.widget.dynamicMarkerWidgetNotifier.value = markerIcon;
-    print(_osmFlutterState.dynamicMarkerKey);
     await Future.delayed(Duration(milliseconds: 300), () async {
       await osmPlatform.clusterMarkers(
         _idMap,
@@ -818,6 +818,21 @@ class MobileOSMController extends IBaseOSMController {
         newLocation,
         globalKeyIcon:
             newMarkerIcon != null ? _osmFlutterState.dynamicMarkerKey : null,
+      );
+    });
+  }
+
+  @override
+  Future<void> setMarkersInClusterIcon(
+    String clusterId,
+    MarkerIcon markersIcon,
+  ) async {
+    _osmFlutterState.widget.dynamicMarkerWidgetNotifier.value = markersIcon;
+    await Future.delayed(Duration(milliseconds: 300), () async {
+      await osmPlatform.setMarkersInClusterIcon(
+        _idMap,
+        clusterId,
+        _osmFlutterState.dynamicMarkerKey,
       );
     });
   }
