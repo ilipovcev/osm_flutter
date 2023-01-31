@@ -504,6 +504,9 @@ class FlutterOsmView(
                 "setMarkersInClusterIcon" -> {
                     setMarkersInClusterIcon(call, result)
                 }
+                "setSpecificMarkerInClusterIcon" -> {
+                    setSpecificMarkerInClusterIcon(call, result)
+                }
                 "cluster#IconMarker" -> {
                     clusterIconMarker(call, result)
                 }
@@ -665,7 +668,7 @@ class FlutterOsmView(
 
     private fun setCacheMap() {
         val mapSnapShot = mapSnapShot()
-        // set last location and zoom level and orientation 
+        // set last location and zoom level and orientation
         if (mapSnapShot.centerGeoPoint() != null &&
             !mapSnapShot.centerGeoPoint()!!.eq(GeoPoint(0.0, 0.0))
         ) {
@@ -692,7 +695,7 @@ class FlutterOsmView(
                 }
             }
         }
-        // set geo marker drawable 
+        // set geo marker drawable
         if (mapSnapShot.staticGeoPointsIcons().isNotEmpty()) {
             scope?.launch {
                 mapSnapShot.staticGeoPointsIcons().forEach { (key, icon) ->
@@ -1759,6 +1762,19 @@ class FlutterOsmView(
         }
     }
 
+    private fun setSpecificMarkerInClusterIcon(call: MethodCall, result: MethodChannel.Result) {
+        val args = call.arguments as HashMap<String, Any>
+        val clusterId = args["cluster_id"] as String
+        val markerId = args["marker_id"] as String
+        val markerIcon = if (args["icon"] is ByteArray) getBitmap(args["icon"] as ByteArray) else null
+
+        if (clusters.containsKey(clusterId)) {
+            val marker =
+                clusters[clusterId]!!.items.first { marker: Marker? -> marker?.id.equals(markerId) }
+            marker.icon = getDefaultIconDrawable(null, markerIcon)
+        }
+    }
+
     private fun setMarkersInClusterIcon(call: MethodCall, result: MethodChannel.Result) {
         val args = call.arguments as HashMap<String, Any>
         val clusterId = args["cluster_id"] as String
@@ -2307,7 +2323,4 @@ class FlutterOsmView(
         }
         return true
     }
-
-
 }
-

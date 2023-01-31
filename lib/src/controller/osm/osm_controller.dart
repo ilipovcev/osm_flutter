@@ -836,6 +836,23 @@ class MobileOSMController extends IBaseOSMController {
       );
     });
   }
+
+  @override
+  Future<void> setSpecificMarkerInClusterIcon(
+    String clusterId,
+    String markerId,
+    MarkerIcon markerIcon,
+  ) async {
+    _osmFlutterState.widget.dynamicMarkerWidgetNotifier.value = markerIcon;
+    await Future.delayed(Duration(milliseconds: 300), () async {
+      await osmPlatform.setSpecificMarkerInClusterIcon(
+        _idMap,
+        clusterId,
+        markerId,
+        _osmFlutterState.dynamicMarkerKey,
+      );
+    });
+  }
 }
 
 extension PrivateMethodOSMController on MobileOSMController {
