@@ -82,7 +82,6 @@ fun FlutterOsmView.configZoomMap(call: MethodCall, result: MethodChannel.Result)
     stepZoom = args["stepZoom"] as Double
     initZoom = args["initZoom"] as Double
 
-
     result.success(200)
 }
 
