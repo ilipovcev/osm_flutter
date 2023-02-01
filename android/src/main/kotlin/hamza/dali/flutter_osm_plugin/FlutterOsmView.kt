@@ -36,10 +36,7 @@ import hamza.dali.flutter_osm_plugin.FlutterOsmPlugin.Companion.PAUSED
 import hamza.dali.flutter_osm_plugin.FlutterOsmPlugin.Companion.STARTED
 import hamza.dali.flutter_osm_plugin.FlutterOsmPlugin.Companion.STOPPED
 import hamza.dali.flutter_osm_plugin.FlutterOsmPlugin.Companion.mapSnapShots
-import hamza.dali.flutter_osm_plugin.models.CustomTile
-import hamza.dali.flutter_osm_plugin.models.FlutterMarker
-import hamza.dali.flutter_osm_plugin.models.FlutterRoad
-import hamza.dali.flutter_osm_plugin.models.RoadConfig
+import hamza.dali.flutter_osm_plugin.models.*
 import hamza.dali.flutter_osm_plugin.overlays.CustomLocationManager
 import hamza.dali.flutter_osm_plugin.utilities.*
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding.OnSaveInstanceStateListener
@@ -54,7 +51,6 @@ import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Dispatchers.Main
 import org.osmdroid.bonuspack.clustering.RadiusMarkerClusterer
-import org.osmdroid.bonuspack.clustering.StaticCluster
 import org.osmdroid.bonuspack.routing.OSRMRoadManager
 import org.osmdroid.bonuspack.routing.RoadManager
 import org.osmdroid.bonuspack.utils.PolylineEncoder
@@ -508,7 +504,10 @@ class FlutterOsmView(
                     setSpecificMarkerInClusterIcon(call, result)
                 }
                 "setListLocations" -> {
-                    setListLocations(call, result)
+                    setLocationMarkers(call, result)
+                }
+                "setStopMarkers" -> {
+                    setStopMarkers(call, result)
                 }
                 "cluster#IconMarker" -> {
                     clusterIconMarker(call, result)
@@ -1765,9 +1764,102 @@ class FlutterOsmView(
         }
     }
 
-    private fun setListLocations(call: MethodCall, result: MethodChannel.Result) {
+    private fun setCluster(
+        call: MethodCall,
+        result: MethodChannel.Result,
+        callback: (args: HashMap<String, Any>) -> RadiusMarkerClusterer
+    ) {
         val args = call.arguments as HashMap<String, Any>
+        val overlays = map!!.overlays
 
+        val cluster = callback.invoke(args)
+        cluster.setMaxClusteringZoomLevel(17)
+        cluster.setRadius(300)
+        overlays.add(cluster)
+    }
+
+    private fun setStopMarkers(call: MethodCall, result: MethodChannel.Result) {
+        val args = call.arguments as HashMap<String, Any>
+        val overlays = map!!.overlays
+        val cluster = RadiusMarkerClusterer(context)
+
+        val stops = (args["stops"] as List<HashMap<String, Any>>).map { stop ->
+            val geoPoint = stop["geo_point"] as HashMap<String, Double>
+            StopPoint(
+                id = stop["id"] as Int,
+                name = stop["name"] as String,
+                geoPoint = GeoPoint(geoPoint["lat"] as Double, geoPoint["lng"] as Double),
+            )
+        }
+
+        stops.forEach { stop ->
+            val marker = Marker(map)
+            marker.position = stop.geoPoint
+            marker.id = stop.id.toString()
+            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            marker.setOnMarkerClickListener { marker, _ ->
+                println("invoke method")
+//                methodChannel.invokeMethod(
+//                    "receiveClusterMarkerId",
+//                    mapOf<String, Any>(
+//                        "id" to marker.id,
+//                        "lat" to marker.position.latitude,
+//                        "lon" to marker.position.longitude,
+//                    )
+//                )
+                true
+            }
+            cluster.add(marker)
+        }
+        Log.e("OSM", "setStopMarkers: cluster create", )
+        cluster.setMaxClusteringZoomLevel(17)
+        cluster.setRadius(300)
+        overlays.add(cluster)
+    }
+
+    private fun setLocationMarkers(call: MethodCall, result: MethodChannel.Result) {
+        val args = call.arguments as HashMap<String, Any>
+        val overlays = map!!.overlays
+        val cluster = RadiusMarkerClusterer(context)
+
+        println(args)
+        val locations = (args["locations"] as List<HashMap<String, Any>>).map { loc ->
+            val geoPoint = loc["geo_point"] as HashMap<String, Double>
+            Location(
+                id = loc["id"] as Int,
+                name = loc["name"] as String,
+                slug = loc["slug"] as String,
+                geoPoint = GeoPoint(geoPoint["lat"] as Double, geoPoint["lng"] as Double),
+                typeId = loc["type_id"] as Int,
+                typeSlug = loc["type_slug"] as String?,
+                typeColorHex = loc["type_color_hex"] as String?,
+                typeIconName = loc["type_icon_name"] as String?,
+            )
+        }
+
+        locations.forEach { location ->
+            val marker = Marker(map)
+            marker.position = location.geoPoint
+            marker.id = location.id.toString()
+            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+            marker.setOnMarkerClickListener { marker, _ ->
+                println("invoke method")
+//                methodChannel.invokeMethod(
+//                    "receiveClusterMarkerId",
+//                    mapOf<String, Any>(
+//                        "id" to marker.id,
+//                        "lat" to marker.position.latitude,
+//                        "lon" to marker.position.longitude,
+//                    )
+//                )
+                true
+            }
+            cluster.add(marker)
+        }
+        cluster.setMaxClusteringZoomLevel(17)
+        cluster.setRadius(300)
+        overlays.add(cluster)
+        println(locations)
     }
 
     private fun setSpecificMarkerInClusterIcon(call: MethodCall, result: MethodChannel.Result) {
@@ -2192,6 +2284,7 @@ class FlutterOsmView(
         FlutterOsmPlugin.state.set(FlutterOsmPlugin.RESUMED)
         Log.e("osm", "osm flutter plugin resume")
         if (map == null) {
+            Log.e("osm", "onResume: map = null")
             initMap()
         }
         map?.onResume()
