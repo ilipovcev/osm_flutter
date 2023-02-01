@@ -507,6 +507,9 @@ class FlutterOsmView(
                 "setSpecificMarkerInClusterIcon" -> {
                     setSpecificMarkerInClusterIcon(call, result)
                 }
+                "setListLocations" -> {
+                    setListLocations(call, result)
+                }
                 "cluster#IconMarker" -> {
                     clusterIconMarker(call, result)
                 }
@@ -1762,11 +1765,17 @@ class FlutterOsmView(
         }
     }
 
+    private fun setListLocations(call: MethodCall, result: MethodChannel.Result) {
+        val args = call.arguments as HashMap<String, Any>
+
+    }
+
     private fun setSpecificMarkerInClusterIcon(call: MethodCall, result: MethodChannel.Result) {
         val args = call.arguments as HashMap<String, Any>
         val clusterId = args["cluster_id"] as String
         val markerId = args["marker_id"] as String
-        val markerIcon = if (args["icon"] is ByteArray) getBitmap(args["icon"] as ByteArray) else null
+        val markerIcon =
+            if (args["icon"] is ByteArray) getBitmap(args["icon"] as ByteArray) else null
 
         if (clusters.containsKey(clusterId)) {
             val marker =
@@ -1778,7 +1787,8 @@ class FlutterOsmView(
     private fun setMarkersInClusterIcon(call: MethodCall, result: MethodChannel.Result) {
         val args = call.arguments as HashMap<String, Any>
         val clusterId = args["cluster_id"] as String
-        val markersIcon = if (args["icon"] is ByteArray) getBitmap(args["icon"] as ByteArray) else null
+        val markersIcon =
+            if (args["icon"] is ByteArray) getBitmap(args["icon"] as ByteArray) else null
 
         if (clusters.containsKey(clusterId)) {
             val markers = clusters[clusterId]!!.items

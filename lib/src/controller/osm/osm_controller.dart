@@ -853,6 +853,11 @@ class MobileOSMController extends IBaseOSMController {
       );
     });
   }
+
+  @override
+  Future<void> setListLocations(List<Map<String, dynamic>> locations) async {
+    await osmPlatform.setListLocations(_idMap, locations);
+  }
 }
 
 extension PrivateMethodOSMController on MobileOSMController {
