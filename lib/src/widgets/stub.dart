@@ -7,6 +7,8 @@ Widget getWidget({
   OnGeoPointClicked? onGeoPointClicked,
   OnLocationChanged? onLocationChanged,
   OnMarkerInClusterClicked? onMarkerInClusterClicked,
+  OnStopPointClicked? onStopPointClicked,
+  OnLocationPointClicked? onLocationPointClicked,
   required ValueNotifier<bool> mapIsReadyListener,
   required ValueNotifier<Widget?> dynamicMarkerWidgetNotifier,
   Function(bool)? onMapIsReady,

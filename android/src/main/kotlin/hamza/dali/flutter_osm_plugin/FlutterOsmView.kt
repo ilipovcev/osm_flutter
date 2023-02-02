@@ -1798,21 +1798,20 @@ class FlutterOsmView(
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             marker.setOnMarkerClickListener { marker, _ ->
                 println("invoke method")
-//                methodChannel.invokeMethod(
-//                    "receiveClusterMarkerId",
-//                    mapOf<String, Any>(
-//                        "id" to marker.id,
-//                        "lat" to marker.position.latitude,
-//                        "lon" to marker.position.longitude,
-//                    )
-//                )
+                methodChannel.invokeMethod(
+                    "omMarkerStopTap",
+                    mapOf<String, Any>(
+                        "id" to marker.id,
+                        "lat" to marker.position.latitude,
+                        "lon" to marker.position.longitude,
+                    )
+                )
                 true
             }
             cluster.add(marker)
         }
-        Log.e("OSM", "setStopMarkers: cluster create", )
-        cluster.setMaxClusteringZoomLevel(17)
-        cluster.setRadius(300)
+        cluster.setMaxClusteringZoomLevel(15)
+        cluster.setRadius(150)
         overlays.add(cluster)
     }
 
@@ -1821,7 +1820,6 @@ class FlutterOsmView(
         val overlays = map!!.overlays
         val cluster = RadiusMarkerClusterer(context)
 
-        println(args)
         val locations = (args["locations"] as List<HashMap<String, Any>>).map { loc ->
             val geoPoint = loc["geo_point"] as HashMap<String, Double>
             Location(
@@ -1843,14 +1841,14 @@ class FlutterOsmView(
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
             marker.setOnMarkerClickListener { marker, _ ->
                 println("invoke method")
-//                methodChannel.invokeMethod(
-//                    "receiveClusterMarkerId",
-//                    mapOf<String, Any>(
-//                        "id" to marker.id,
-//                        "lat" to marker.position.latitude,
-//                        "lon" to marker.position.longitude,
-//                    )
-//                )
+                methodChannel.invokeMethod(
+                    "onLocationMarkerTap",
+                    mapOf<String, Any>(
+                        "id" to marker.id,
+                        "lat" to marker.position.latitude,
+                        "lon" to marker.position.longitude,
+                    )
+                )
                 true
             }
             cluster.add(marker)
@@ -1858,7 +1856,6 @@ class FlutterOsmView(
         cluster.setMaxClusteringZoomLevel(17)
         cluster.setRadius(300)
         overlays.add(cluster)
-        println(locations)
     }
 
     private fun setSpecificMarkerInClusterIcon(call: MethodCall, result: MethodChannel.Result) {

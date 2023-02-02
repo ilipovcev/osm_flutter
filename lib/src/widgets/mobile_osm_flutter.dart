@@ -13,6 +13,8 @@ class MobileOsmFlutter extends StatefulWidget {
   final BaseMapController controller;
   final OnGeoPointClicked? onGeoPointClicked;
   final OnMarkerInClusterClicked? onMarkerInClusterClicked;
+  final OnStopPointClicked? onStopPointClicked;
+  final OnLocationPointClicked? onLocationPointClicked;
   final OnLocationChanged? onLocationChanged;
   final ValueNotifier<bool> mapIsReadyListener;
   final Widget? mapIsLoading;
@@ -42,6 +44,8 @@ class MobileOsmFlutter extends StatefulWidget {
     this.onGeoPointClicked,
     this.onLocationChanged,
     this.onMarkerInClusterClicked,
+    this.onStopPointClicked,
+    this.onLocationPointClicked,
     required this.mapIsReadyListener,
     required this.dynamicMarkerWidgetNotifier,
     this.staticPoints = const [],
