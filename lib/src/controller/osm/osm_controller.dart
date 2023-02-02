@@ -145,11 +145,13 @@ class MobileOSMController extends IBaseOSMController {
     }
     if (_osmFlutterState.widget.onStopPointClicked != null) {
       osmPlatform.onStopPointClickListener(_idMap).listen((event) {
+        print('receive event $event');
         _osmFlutterState.widget.onStopPointClicked!(event.value);
       });
     }
     if (_osmFlutterState.widget.onLocationPointClicked != null) {
       osmPlatform.onLocationPointClickListener(_idMap).listen((event) {
+        print('receive event $event');
         _osmFlutterState.widget.onLocationPointClicked!(event.value);
       });
     }

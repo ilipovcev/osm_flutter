@@ -1799,7 +1799,7 @@ class FlutterOsmView(
             marker.setOnMarkerClickListener { marker, _ ->
                 println("invoke method")
                 methodChannel.invokeMethod(
-                    "omMarkerStopTap",
+                    "onStopMarkerTap",
                     mapOf<String, Any>(
                         "id" to marker.id,
                         "lat" to marker.position.latitude,
